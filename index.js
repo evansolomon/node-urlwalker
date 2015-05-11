@@ -49,7 +49,12 @@ exports.walk = function (optsOrUrl, callback) {
 
 exports.findNext = function (originalUrl, callback) {
   // request will automatically follow redirects
-  request(originalUrl, function (err, res, body) {
+  request({
+    url: originalUrl,
+    headers: {
+      'user-agent': 'Node URL Walker'
+    }
+  }, function (err, res, body) {
     if (err) return callback(err)
 
     // Final URI that the request module got
