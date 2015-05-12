@@ -67,19 +67,26 @@ exports.findNext = function (originalUrl, callback) {
       nextUrl: redirectedUri
     }
 
-    var $ = cheerio.load(body)
-    var canonical = $('link[rel="canonical"]')
-    if (canonical.length) {
-      result.nextUrl = url.resolve(result.nextUrl, canonical.attr('href'))
-    } else if (result.headers.link) {
-      var linkHeader = parseLinkHeader(result.headers.link)
-      if (linkHeader.canonical) {
-        result.nextUrl = url.resolve(result.nextUrl, linkHeader.canonical.url)
-      }
+    var canonical = exports.getCanonicalUrl(res, body)
+    if (canonical) {
+      result.nextUrl = url.resolve(result.nextUrl, canonical)
     }
 
     return callback(null, result)
   })
+}
+
+exports.getCanonicalUrl = function (response, html) {
+  var $ = cheerio.load(html)
+  var canonical = $('link[rel="canonical"]')
+  if (canonical.length) {
+    return canonical.attr('href')
+  } else if (response.headers.link) {
+    var linkHeader = parseLinkHeader(response.headers.link)
+    if (linkHeader.canonical) {
+      return linkHeader.canonical.url
+    }
+  }
 }
 
 
