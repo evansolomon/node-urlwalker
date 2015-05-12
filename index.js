@@ -3,6 +3,7 @@ var url = require('url')
 var async = require('async')
 var cheerio = require('cheerio')
 var request = require('request')
+var parseLinkHeader = require('parse-link-header')
 
 exports.walk = function (optsOrUrl, callback) {
   var opts
@@ -70,6 +71,11 @@ exports.findNext = function (originalUrl, callback) {
     var canonical = $('link[rel="canonical"]')
     if (canonical.length) {
       result.nextUrl = url.resolve(result.nextUrl, canonical.attr('href'))
+    } else if (result.headers.link) {
+      var linkHeader = parseLinkHeader(result.headers.link)
+      if (linkHeader.canonical) {
+        result.nextUrl = url.resolve(result.nextUrl, linkHeader.canonical.url)
+      }
     }
 
     return callback(null, result)
