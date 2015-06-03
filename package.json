@@ -1,13 +1,14 @@
 {
   "name": "urlwalker",
   "version": "1.0.2",
-  "description": "",
+  "description": "Traverse URL redirects and rel=\"canonical\"'s until you hit the end of the line.",
   "main": "index.js",
   "scripts": {
     "test": "jshint index.js && mocha"
   },
   "author": "Evan Solomon",
   "license": "MIT",
+  "repository": "evansolomon/node-urlwalker",
   "dependencies": {
     "async": "^0.9.0",
     "cheerio": "^0.19.0",
