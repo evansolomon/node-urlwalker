@@ -14,11 +14,12 @@ exports.walk = function (optsOrUrl, callback) {
   }
 
   var stack = new RedirectStack(opts.url)
+  var cookieJar = request.jar()
 
   async.until(function () {
     return stack.isFinished()
   }, function (done) {
-    exports.findNext(stack.last().url, function (err, result) {
+    exports.findNext(stack.last().url, cookieJar, function (err, result) {
       if (err) return done(err)
 
       stack.setSuccess(stack.length - 1, result.success)
@@ -48,9 +49,10 @@ exports.walk = function (optsOrUrl, callback) {
   })
 }
 
-exports.findNext = function (originalUrl, callback) {
+exports.findNext = function (originalUrl, cookieJar, callback) {
   // request will automatically follow redirects
   request({
+    jar: cookieJar,
     url: originalUrl,
     headers: {
       'user-agent': 'Node URL Walker'
