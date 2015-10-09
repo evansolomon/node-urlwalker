@@ -79,9 +79,18 @@ exports.findNext = function (originalUrl, cookieJar, callback) {
 }
 
 exports.getCanonicalUrl = function (response, html) {
-  var $ = cheerio.load(html)
-  var canonical = $('link[rel="canonical"]')
-  if (canonical.length) {
+  var $
+  var canonical
+
+  try {
+    $ = cheerio.load(html)
+    canonical = $('link[rel="canonical"]')
+  } catch (err) {
+    console.error('Error loading body content in cheerio')
+    console.error(err)
+  }
+
+  if (canonical && canonical.length) {
     return canonical.attr('href')
   } else if (response.headers.link) {
     var linkHeader = parseLinkHeader(response.headers.link)
