@@ -1,6 +1,6 @@
 {
   "name": "urlwalker",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Traverse URL redirects and rel=\"canonical\"'s until you hit the end of the line.",
   "main": "index.js",
   "scripts": {
